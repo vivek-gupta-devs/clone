@@ -1,0 +1,16 @@
+{
+  "name": "clone",
+  "version": "1.0.0",
+  "description": "An application for backend concept revision",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "express",
+    "mongoose",
+    "mongodb"
+  ],
+  "author": "Vivek Gupta",
+  "license": "ISC"
+}
