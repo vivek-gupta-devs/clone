@@ -1,21 +1,26 @@
 import {v2 as cloudinary} from 'cloudinary';
 import fs from "fs";
+import { ApiError } from './ApiError.js';
           
 cloudinary.config({ 
-  cloud_name: process.env.CLOUD_NAME, 
-  api_key: process.env.API_KEY, 
-  api_secret: process.env.API_SECRET
+  cloud_name: process.env.CLOUD_NAME || "samplename", 
+  api_key: process.env.API_KEY || "435539781257569", 
+  api_secret: process.env.API_SECRET || "G-pH00lvhXOhR-ez-Gg0LiATyCk"
 });
 
 const uploadOnCloudinary = async(localFilePath) => {
     try {
-        if(!localFilePath) return null;
+      console.log(localFilePath)
+        if(!localFilePath) {
+          throw new ApiError(400,"FilePath is needed to load file on cloudnary")
+        };
         // upload the file on cloudnary
-        const response = await cloudinary.uploader.upload(localFilePath,{
+        const response = await cloudinary.uploader.upload(
+          localFilePath, {
             resource_type: "auto"
-        })
-        // file uploading done
-        console.log("file is uploaded on cloudnary", response.url);
+          }
+        )
+        fs.unlinkSync(localFilePath)
         return response;
 
     } catch (error) {
@@ -24,13 +29,7 @@ const uploadOnCloudinary = async(localFilePath) => {
     }
 }
 
-/** 
 
-cloudinary.v2.uploader.upload("https://upload.wikimedia.org/wikipedia/commons/a/ae/Olympic_flag.jpg",
-  { public_id: "olympic_flag" }, 
-  function(error, result) {console.log(result); });
-
-*/
 export {
      uploadOnCloudinary
 }
