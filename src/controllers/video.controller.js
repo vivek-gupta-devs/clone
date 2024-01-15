@@ -57,6 +57,8 @@ const getVideoById = asyncHandler(async (req, res) => {
     const { videoId } = req.params
     //TODO: get video by id
 
+    validateBasedOnId(videoId)
+    
     const video = await Video.findById(videoId);
 
     if(!video){
@@ -75,6 +77,8 @@ const updateVideo = asyncHandler(async (req, res) => {
 
     const {title, description} = req.body;
 
+    validateBasedOnId(videoId)
+    
     if([title, description].some((anyField) => anyField?.trim() === "")){
         throw new ApiError(400, "title & description is required.")
     }
@@ -111,7 +115,9 @@ const deleteVideo = asyncHandler(async (req, res) => {
     const { videoId } = req.params
     //TODO: delete video
 
-    const video = await Video.findByIdAndDelete(videoId);
+    validateBasedOnId(videoId);
+
+    await Video.findByIdAndDelete(videoId);
 
     return res.status(200).json(
         new ApiResponse(200,{},"video deleted succesfully")
@@ -122,6 +128,8 @@ const togglePublishStatus = asyncHandler(async (req, res) => {
 
     const { videoId } = req.params
     //TODO: get video by id
+
+    validateBasedOnId(videoId)
 
     const video = await Video.findById(videoId).select("-createdAt -updatedAt");
 
@@ -140,6 +148,16 @@ const togglePublishStatus = asyncHandler(async (req, res) => {
     )
 
 })
+
+const validateBasedOnId = (id) => {
+
+    const validateId = isValidObjectId(id);
+
+    if(!validateId){
+        throw new ApiError(400,"please provide valid videoId.")
+    }
+
+}
 
 export {
     getAllVideos,
