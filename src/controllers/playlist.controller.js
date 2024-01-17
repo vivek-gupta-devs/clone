@@ -73,7 +73,7 @@ const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
     const playlist = await Playlist.findByIdAndUpdate(playlistId,
         {
             $pull: {
-                "videos": videoId
+                videos: videoId
             }
         },{
             new: true
