@@ -21,6 +21,7 @@ import commentRouter from "./routes/comment.routes.js"
 import likeRouter from "./routes/like.routes.js"
 import playlistRouter from "./routes/playlist.routes.js"
 import dashboardRouter from "./routes/dashboard.routes.js"
+import errorMiddleware  from "./middlewares/error.middleware.js"
 
 //routes declaration
 app.use("/api/v1/healthcheck", healthcheckRouter)
@@ -35,5 +36,16 @@ app.use("/api/v1/dashboard", dashboardRouter)
 
 // http://localhost:8000/api/v1/users/register
 
+app.all("*",(_,res) => {
+    return res.status(404).json(
+        {
+            status: 404,
+            success: false,
+            message: "!oops page not found"
+        }
+    )
+})
+
+app.use(errorMiddleware)
 
 export default app
