@@ -13,6 +13,28 @@ const toggleCommentLike = asyncHandler(async (req, res) => {
     const {commentId} = req.params
     //TODO: toggle like on comment
 
+    const comment = await Like.findOne({comment: commentId, likedBy: req.user._id});
+
+    let status;
+    if(comment){
+       status = await Like.deleteOne({
+        comment: commentId
+       }) 
+
+       
+    }else{
+        status = await Like.create({
+            comment: commentId,
+            likedBy: req.user._id,
+        
+        })
+    }
+
+    return res.status(200).json(
+        new ApiResponse(200,status,"comment like updated successfully")
+    )
+
+
 })
 
 const toggleTweetLike = asyncHandler(async (req, res) => {
