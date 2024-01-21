@@ -1,31 +1,44 @@
 import {v2 as cloudinary} from 'cloudinary';
 import fs from "fs";
 import { ApiError } from './ApiError.js';
-          
-cloudinary.config({ 
-  cloud_name: process.env.CLOUD_NAME || "samplename", 
-  api_key: process.env.API_KEY || "435539781257569", 
-  api_secret: process.env.API_SECRET || "G-pH00lvhXOhR-ez-Gg0LiATyCk"
+import dotenv from "dotenv";
+
+dotenv.config({
+  path: ".env"
 });
+
+cloudinary.config({ 
+  cloud_name: process.env.CLOUD_NAME, 
+  api_key: process.env.API_KEY, 
+  api_secret: process.env.API_SECRET
+});
+
 
 const uploadOnCloudinary = async(localFilePath) => {
     try {
-      console.log(localFilePath)
         if(!localFilePath) {
           throw new ApiError(400,"FilePath is needed to load file on cloudnary")
         };
         // upload the file on cloudnary
         const response = await cloudinary.uploader.upload(
-          localFilePath, {
+          localFilePath, 
+          {
             resource_type: "auto"
           }
         )
-        fs.unlinkSync(localFilePath)
         return response;
 
     } catch (error) {
-        fs.unlinkSync(localFilePath) // remove the local saved temporary file as the upload operation got failed.
-        return null;
+        console.error("Error while uploading file to cloudnary : " , error)
+    }finally {
+      if(localFilePath){
+        try {
+          fs.unlinkSync(localFilePath)
+        } catch (error) {
+          console.error("Error while deleting file from local folder : " , error)
+
+        }
+      }
     }
 }
 
