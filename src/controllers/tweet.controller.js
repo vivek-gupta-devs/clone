@@ -49,6 +49,10 @@ const updateTweet = asyncHandler(async (req, res) => {
     //TODO: update tweet
     const { tweetId } = req.params
     const { content } = req.body
+
+    if(!content){
+        throw new ApiError(404, "Please provide some textfull content.")
+    }
     
     validateBasedOnId(tweetId);
 

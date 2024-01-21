@@ -102,7 +102,12 @@ const getLikedVideos = asyncHandler(async (req, res) => {
                 foreignField: "_id",
                 as: "collection"
               }
-            },{
+            },
+            {
+                $unwind: "$collection"
+            },
+            
+            {
               $project: {
                 collection: 1,
                 _id: 0

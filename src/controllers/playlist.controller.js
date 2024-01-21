@@ -10,6 +10,10 @@ const createPlaylist = asyncHandler(async (req, res) => {
 
     //TODO: create playlist
 
+    if(!name || !description){
+        throw new ApiError(400, "name or description is required")
+    }
+
     const playlist = await Playlist.create({
         name,
         description,
@@ -62,6 +66,10 @@ const addVideoToPlaylist = asyncHandler(async (req, res) => {
         }
     )
 
+    if(!playlist){
+        throw new ApiError(404,"No playlist found")
+    }
+
     return res.status(201).json(
         new ApiResponse(200, playlist,"video added to playlist")
     )
@@ -80,6 +88,10 @@ const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
         }
     )
 
+    if(!playlist){
+        throw new ApiError(404,"No playlist found")
+    }
+
     return res.status(201).json(
         new ApiResponse(200, playlist,"video removed from playlist")
     )
@@ -90,7 +102,11 @@ const deletePlaylist = asyncHandler(async (req, res) => {
     const {playlistId} = req.params
     // TODO: delete playlist
 
-    await Playlist.findByIdAndDelete(playlistId);
+    const playlist = await Playlist.findByIdAndDelete(playlistId);
+
+    if(!playlist){
+        throw new ApiError(404,"No playlist found")
+    }
 
     return res.status(200).json(
         new ApiResponse(200,{},"playlist deleted successfully")
@@ -102,6 +118,10 @@ const updatePlaylist = asyncHandler(async (req, res) => {
     const {name, description} = req.body
     //TODO: update playlist
 
+    if(!name || !description){
+        throw new ApiError(400, "name or description is required")
+    }
+
     const playlist = await Playlist.findByIdAndUpdate(playlistId, {
         $set: {
             name: name,
@@ -110,6 +130,10 @@ const updatePlaylist = asyncHandler(async (req, res) => {
     },{
         new: true
     })
+
+    if(!playlist){
+        throw new ApiError(404,"No playlist found")
+    }
 
     return res.status(200).json(
         new ApiResponse(200, playlist, "playlist name & description updated successfully")

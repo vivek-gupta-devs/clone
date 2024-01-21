@@ -55,6 +55,10 @@ const updateComment = asyncHandler(async (req, res) => {
     const {commentId} = req.params
     const { content } = req.body
 
+    if(!content){
+        throw new ApiError(200,"content is required")
+    }
+
     const comment = await Comment.findByIdAndUpdate(commentId, {
         $set: {
             content : content

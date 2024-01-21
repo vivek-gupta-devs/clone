@@ -40,7 +40,7 @@ const toggleSubscription = asyncHandler(async (req, res) => {
 const getUserChannelSubscribers = asyncHandler(async (req, res) => {
     const { subscriberId } = req.params
     
-    const subscriber = await Subscription.aggregate(
+    const channels = await Subscription.aggregate(
         [
             {
               $match: {
@@ -69,8 +69,12 @@ const getUserChannelSubscribers = asyncHandler(async (req, res) => {
           ]
     )
 
+    if(!channels.length){
+      throw new ApiError(404,"No Subscriber found")
+    }
+
     return res.status(200).json(
-        new ApiResponse(200,subscriber,"All channels")
+        new ApiResponse(200,channels,"All channels")
     )
 })
 
@@ -117,8 +121,12 @@ const getSubscribedChannels = asyncHandler(async (req, res) => {
           ]
     )
 
+    if(!subscribers.length){
+      throw new ApiError(404,"No Subscriber found")
+    }
+
     return res.status(200).json(
-        new ApiResponse(200,subscribers,"Subscriber for channel")
+        new ApiResponse(200,subscribers,"All Subscriber")
     )
 
    
