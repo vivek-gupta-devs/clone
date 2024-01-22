@@ -2,6 +2,7 @@ import {v2 as cloudinary} from 'cloudinary';
 import fs from "fs";
 import { ApiError } from './ApiError.js';
 import dotenv from "dotenv";
+import { log } from 'console';
 
 dotenv.config({
   path: ".env"
@@ -42,7 +43,26 @@ const uploadOnCloudinary = async(localFilePath) => {
     }
 }
 
+const deleteOnCloudinary = async(path0) => {
+
+  try {
+    const path = path0.substring(path0.lastIndexOf("/") + 1, path0.lastIndexOf("."))
+    const response = await cloudinary
+          .api
+          .delete_resources([path], 
+              {  type: 'upload',resource_type: 'image' }
+            )
+
+    return response;
+                          
+  } catch (err) {
+    console.log(err)
+      throw new ApiError(200,"Error occurred while deleting previous file on Cloudinary")
+  }
+}
+
 
 export {
-     uploadOnCloudinary
+     uploadOnCloudinary,
+     deleteOnCloudinary
 }
