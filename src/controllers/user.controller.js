@@ -325,7 +325,7 @@ const logoutUser = asyncHandler( async(req,res) => {
         }).select("-password");
 
 
-    const response = await deleteOnCloudinary(oldAvatar);
+    const response = await deleteOnCloudinary(oldAvatar,'image');
     
     return res.status(200).json( new ApiResponse(200, {user}, "Avatar file is updated."))
 
@@ -363,7 +363,7 @@ const logoutUser = asyncHandler( async(req,res) => {
         }).select("-password");
 
     if(oldCoverImage != ""){
-        const response = await deleteOnCloudinary(oldCoverImage);
+        const response = await deleteOnCloudinary(oldCoverImage,'image');
         console.log(JSON.stringify(response))
     }
 

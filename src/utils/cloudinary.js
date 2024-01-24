@@ -2,7 +2,7 @@ import {v2 as cloudinary} from 'cloudinary';
 import fs from "fs";
 import { ApiError } from './ApiError.js';
 import dotenv from "dotenv";
-import { log } from 'console';
+import { Console, log } from 'console';
 
 dotenv.config({
   path: ".env"
@@ -43,14 +43,14 @@ const uploadOnCloudinary = async(localFilePath) => {
     }
 }
 
-const deleteOnCloudinary = async(path0) => {
+const deleteOnCloudinary = async(path0, type) => {
 
   try {
     const path = path0.substring(path0.lastIndexOf("/") + 1, path0.lastIndexOf("."))
     const response = await cloudinary
           .api
           .delete_resources([path], 
-              {  type: 'upload',resource_type: 'image' }
+              {  type: 'upload',resource_type: type }
             )
 
     return response;
